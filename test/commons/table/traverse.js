@@ -32,6 +32,19 @@ describe('table.traverse', () => {
     assert.deepEqual(result, ['1b', '1c']);
   });
 
+  it('returns the entire column of a long table in order', () => {
+    const rows = Array.from({ length: 20000 }, (_, i) => [i + 1]);
+    const result = table.traverse('down', topRight, rows);
+    assert.deepEqual(
+      result,
+      rows.slice(1).map(row => row[0])
+    );
+  });
+
+  it('does not visit any cells without a direction of travel', () => {
+    assert.deepEqual(table.traverse({ x: 0, y: 0 }, topRight, dummyTable), []);
+  });
+
   it('traverses in the `down` direction', () => {
     let iterations = 0;
     const expect = ['2a', '3a'];
